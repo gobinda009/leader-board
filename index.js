@@ -1,77 +1,102 @@
-// Blueprint:
-
-const form = document.querySelector(".options");
-form.addEventListener("submit", (e) => { // 'e' is the event object.
+document.querySelector("form").addEventListener("submit", (e)=>{
     e.preventDefault();
-    // e.target property refers to the object that triggered the event.
-    const first = e.target.children[0].value;
-    const last = e.target.children[1].value;
-    const fullname = first + " " + last; // concatenate
-    const country = e.target.children[2].value;
-    const score = e.target.children[3].value;
 
-    addPlayer(fullname, country, score);
-    remove();
-});
+    const firstName = e.target.children[0].value,
+     lastName = e.target.children[1].value,
+     country = e.target.children[2].value,
+     score = e.target.children[3].value;
+     errorPrompter = document.querySelector(".main_error-prompter");
 
-const displayResult = document.querySelector(".display-result");
+     errorPrompter.style.display = "none";
 
+     if(firstName === '' || lastName === '' || country === '' || score === '')
+     return (errorPrompter.style.display = "block");
 
-const addPlayer = (fullname, country, score) => {
-    newDiv = document.createElement("div");
-    newDiv.style.backgroundColor = "cyan"; // CSS
-    newDiv.innerHTML =
-        `
-    <span class="player-name">${fullname}</span>
-    <span class="date">${generateDateAndTime()}</span>
-    <span class="country">${country}</span>
-    <span class="score">${score}</span>
-    <button class="delete">delete</button>
-    <button class="increase">+5</button>
-    <button class="decrease">-5</button>
-    `
-    displayResult.appendChild(newDiv);
+     const scoreboardContainer = document.querySelector(".main_scoreboard-wrapper")
+     const scoreboardElement = document.createElement("div");
 
-    const increaseButton = newDiv.querySelector(".increase");
-    const decreaseButton = newDiv.querySelector(".decrease");
-    const scoreElement = newDiv.querySelector(".score");
+     scoreboardElement.classList.add("main_scoreboard");
 
-    // Add +5
-    increaseButton.addEventListener("click", () => {
-        let currentScore = parseInt(scoreElement.textContent);
-        currentScore += 5; // updating the value of current score
-        scoreElement.textContent = currentScore;
-    });
+     scoreboardElement.innerHTML = `
+     <div>
+        <p class="main_player-name">${firstName} ${lastName}</p>
+        <p class="main_time-stamp">${generateDateAndTime()}</p>
+    </div>
+    <p class="main_player-country">${country}</p>
+        <p class="main_player-score">${score}</p>
+        <div class="main_scoreboard-btn-container">
+            <button>&#x1f5d1;</button>
+            <button>+5</button>
+            <button>-5</button>
+    </div>
+     `
+     scoreboardContainer.appendChild(scoreboardElement);
+     sortScoreBoard()
+     activateBtnEventListener()
+})
 
-    // Decrease by -5
-    decreaseButton.addEventListener("click", () => {
-        let currentScore = parseInt(scoreElement.textContent);
-        currentScore -= 5; // updating the value of current score
-        scoreElement.textContent = currentScore;
-    });
-}
+function activateBtnEventListener(){
+    document.querySelectorAll(".main_scoreboard-btn-container").forEach((el)=>{
+        el.addEventListener("click", (e)=>{
+            let textContent = e.target.textContent;
+            console.log(textContent);
+            let scorePlayer = e.target.parentElement.parentElement.children[2];
+            console.log(scorePlayer);
 
-// Delete
-const remove = () => {
-    const deleteButton = document.querySelectorAll(".delete");
-    deleteButton.forEach((del) => {
-        del.addEventListener("click", () => {
-            del.parentElement.remove();
+            if(textContent.length > 2) return;
+
+            console.log(e.target.parentElement.parentElement);
+            console.log("hi");
+
+            if(textContent === '🗑')
+            return e.target.parentElement.parentElement.remove();
+
+            scorePlayer.textContent = parseInt(scorePlayer.textContent) + parseInt(textContent);
+
+            sortScoreBoard()
+        
         });
     });
 }
 
+activateBtnEventListener()
 
-const generateDateAndTime = () => {
-    let dateObject = new Date();
+function sortScoreBoard(){
+    let scoreboardContainer = document.querySelector(".main_scoreboard-wrapper");
 
-    let month = dateObject.toLocaleDateString("default", { month: "long" });
-    let day = dateObject.getDate();
-    let year = dateObject.getFullYear();
-    let time = dateObject.toLocaleTimeString().slice(0, 8);
+    let scoreBoards = document.querySelectorAll(".main_scoreboard");
 
-    let generateResult = `${month} ${day} ${year} ${time}`;
-    return generateResult;
+    let elementsInArray = [];
+    scoreBoards.forEach((el)=> elementsInArray.push(el));
+
+    console.log(elementsInArray);
+    let sortedElements = elementsInArray.map((el)=>{
+        return el;
+    })
+    .sort((a,b)=>{
+        let numA = parseInt(a.children[2].textContent),
+        numB = parseInt(b.children[2].textContent)
+
+        if(numA > numB) return -1;
+        if(numA < numB) return 1;
+    });
+
+    sortedElements.forEach((el)=>{
+        scoreboardContainer.append(el);
+    })
 }
 
+function generateDateAndTime(){
+    let dateObject = new Date();
+    // console.log(dateObject);
+    let month = dateObject.toLocaleString("default", {month:"long"})
+    // console.log(month);
+    day = dateObject.getDate(),
+    year = dateObject.getFullYear(),
+    time = dateObject.toLocaleTimeString().slice(0,8);
+    // console.log(time);
 
+    let generateResult = `${month} ${day}: ${year} ${time}`
+
+    return generateResult;
+}

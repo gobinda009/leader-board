@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>LeaderBoard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="main-container">
-        <h1>LeaderBoard</h1>
-        <form class="options">
-            <input type="text" id="first" placeholder="First name">
-            <input type="text" id="last" placeholder="Last name">
-            <input type="text" id="country" placeholder="Country">
-            <input type="text" id="score" placeholder="Score">
-            <button class="add-btn">Add Player</button>
+    <main>
+        <h1 class="main_title">LeaderBoard</h1>
+        <form class="main_form">
+            <input type="text" placeholder="First Name">
+            <input type="text" placeholder="Last Name">
+            <input type="text" placeholder="Country">
+            <input type="number" placeholder="Player Score">
+            <button class="main_form-submit-btn">Add Player</button>
         </form>
+        <p class="main_error-prompter">All fields are required</p>
 
-        <div class="display-result"></div>
-    </div>
-
+        <div class="main_scoreboard-wrapper">
+            <div class="main_scoreboard">
+                <div>
+                    <p class="main_player-name">Rahul Sharma</p>
+                    <p class="main_time-stamp">Mar 2023: 10:24:04</p>
+                </div>
+                <p class="main_player-country">India</p>
+                <p class="main_player-score">70</p>
+                <div class="main_scoreboard-btn-container">
+                    <button>&#x1F5D1;</button>
+                    <button>+5</button>
+                    <button>-5</button>
+                </div>
+            </div>
+        </div>
+    </main>
     <script src="index.js"></script>
 </body>
-
 </html>
